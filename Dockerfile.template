@@ -1,0 +1,48 @@
+FROM cimg/%%PARENT%%:2021.10
+
+LABEL maintainer="Community & Partner Engineering Team <community-partner@circleci.com>"
+
+ENV MYSQL_VERSION=%%VERSION_FULL%%
+
+USER root
+
+RUN groupadd -r mysql && useradd -r -g mysql mysql && \
+	mkdir /docker-entrypoint-initdb.d
+
+RUN curl -sSL -O https://downloads.mysql.com/archives/get/p/23/file/mysql-community-server-core_${MYSQL_VERSION}-1ubuntu20.04_amd64.deb && \
+	curl -sSL -O https://downloads.mysql.com/archives/get/p/23/file/mysql-community-client_${MYSQL_VERSION}-1ubuntu20.04_amd64.deb && \
+	curl -sSL -O https://downloads.mysql.com/archives/get/p/23/file/mysql-community-client-core_${MYSQL_VERSION}-1ubuntu20.04_amd64.deb && \
+	curl -sSL -O https://downloads.mysql.com/archives/get/p/23/file/mysql-common_${MYSQL_VERSION}-1ubuntu20.04_amd64.deb && \
+	curl -sSL -O https://downloads.mysql.com/archives/get/p/23/file/mysql-community-client-plugins_${MYSQL_VERSION}-1ubuntu20.04_amd64.deb && \
+	apt update && apt install -y gosu && \
+	apt install ./*.deb && \
+	rm -rf *.deb && \
+	rm -rf /var/lib/apt/lists/*
+
+RUN mkdir -p /var/lib/mysql /var/run/mysqld && \
+	chown -R mysql:mysql /var/lib/mysql /var/run/mysqld && \
+	chmod 777 /var/run/mysqld /var/lib/mysql
+
+RUN echo $'\n\
+	[mysqld]\n\
+	pid-file=/var/run/mysqld/mysqld.pid\n\
+	socket=/var/run/mysqld/mysqld.sock\n\
+	datadir=/var/lib/mysql\n\
+	secure-file-priv=NULL' >> /etc/mysql/my.cnf
+
+COPY docker-entrypoint.sh /usr/local/bin/
+
+# symlink for backwards compatiblity
+RUN ln -s usr/local/bin/docker-entrypoint.sh / && \
+	chmod +x /usr/local/bin/docker-entrypoint.sh && \
+	chown -R mysql:mysql /usr/local/bin/docker-entrypoint.sh && \
+	mysql --version | grep "${MYSQL_VERSION}"
+
+ENV MYSQL_ROOT_HOST=% \
+	MYSQL_ALLOW_EMPTY_PASSWORD=true \
+	MYSQL_DATABASE=circle_test
+
+ENTRYPOINT ["docker-entrypoint.sh"]
+STOPSIGNAL SIGINT
+EXPOSE 3306
+CMD ["mysqld"]
