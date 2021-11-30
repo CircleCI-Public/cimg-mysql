@@ -1,10 +1,10 @@
-FROM cimg/%%PARENT%%:2021.10
+FROM cimg/base:2021.10
 
 LABEL maintainer="Community & Partner Engineering Team <community-partner@circleci.com>"
 
-ENV MYSQL_VERSION=%%VERSION_FULL%% \
-	MYSQL_VERSION_MAJOR=%%VERSION_MAJOR%% \
-	MYSQL_VERSION_MINOR=%%VERSION_MINOR%%
+ENV MYSQL_VERSION=8.0.27 \
+	MYSQL_VERSION_MAJOR=8 \
+	MYSQL_VERSION_MINOR=8.0
 
 USER root
 
