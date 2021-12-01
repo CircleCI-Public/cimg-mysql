@@ -44,7 +44,8 @@ RUN ln -s usr/local/bin/docker-entrypoint.sh / && \
 
 ENV MYSQL_ROOT_HOST=% \
 	MYSQL_ALLOW_EMPTY_PASSWORD=true \
-	MYSQL_DATABASE=circle_test
+	MYSQL_DATABASE=circle_test \
+	MYSQL_MAJOR=$MYSQL_VERSION_MINOR
 
 ENTRYPOINT ["docker-entrypoint.sh"]
 STOPSIGNAL SIGINT
