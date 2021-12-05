@@ -27,7 +27,7 @@ jobs:
           shell: /bin/bash -o pipefail
           command: |
             ssh -f -N -L localhost:3306:localhost:3306 remote-docker
-            IMAGES=$(docker images --format='{{.Repository}}:{{.Tag}}' | grep -Eo "cimg/mysql:[0-9]+\.[0-9]+\.[0-9]+")
+            IMAGES=$(docker images --format='{{.Repository}}:{{.Tag}}')
             for IMAGE in $IMAGES; do
               printf "Booting $IMAGE...\n"
               CONTAINER_ID=$(docker run --rm --env MYSQL_USER=user --env MYSQL_PASSWORD=passw0rd -p 3306:3306 -d $IMAGE)
@@ -37,7 +37,7 @@ jobs:
                 if [ $? -eq 0 ]; then
                   printf "Booted $IMAGE!\n"
                   break
-                elif [ $? -ne 0 ] && [ $i -eq 36 ]; then
+                elif [ $? -ne 0 ] && [ $i -eq 20 ]; then
                   printf "Failed to boot image\n"
                   exit 1
                 fi
