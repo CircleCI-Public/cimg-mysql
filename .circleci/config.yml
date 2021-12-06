@@ -44,13 +44,18 @@ jobs:
                 printf "[$i/20] No response. Sleeping 10s...\n"
                 sleep 10s
               done
-              printf "Running Test Command...\n"
-              mysql -h 127.0.0.1 -u user -ppassw0rd --execute="SELECT VERSION();"
+              printf "Running Version Check...\n"
+              VERSION=$(echo $IMAGE | cut -d ":" -f2 | cut -d "-" -f1)
+              if mysql -h 127.0.0.1 -u user -ppassw0rd --execute="SELECT VERSION();" | grep $VERSION ; then
+                printf "Version matches!\n"
+              else
+                printf "Version mismatch!\n"
+                exit 1
+              fi
               printf "Stopping $IMAGE...\n"
               docker stop $CONTAINER_ID >/dev/null 2>&1
             done
             printf "All images passed!\n"
-
       - deploy:
           name: "Publish Docker Images (main branch only)"
           command: |
