@@ -28,6 +28,7 @@ RUN groupadd -r mysql && useradd -r -g mysql mysql && \
 	pid-file=/var/run/mysqld/mysqld.pid\n\
 	socket=/var/run/mysqld/mysqld.sock\n\
 	datadir=/var/lib/mysql\n\
+	default_authentication_plugin=mysql_native_password\n\
 	secure-file-priv=NULL' >> /etc/mysql/my.cnf && \
 	echo '[mysqld]\nskip-host-cache\nskip-name-resolve' > /etc/mysql/conf.d/docker.cnf && \
 	find /etc/mysql/ -name '*.cnf' -print0 \
