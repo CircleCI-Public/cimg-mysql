@@ -3,3 +3,4 @@
 repository=mysql
 parent=base
 variants=()
+namespace=cimg
