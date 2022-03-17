@@ -79,10 +79,11 @@ jobs:
             fi
       - when:
           condition:
-            equal: [main, << pipeline.git.branch >>]
+            equal: [fix-readme-sync, << pipeline.git.branch >>]
           steps:
             - sonar/install:
                 version: "0.15.0"
             - sonar/update-readme:
                 image: cimg/mysql
             - run: sonar set readme cimg/mysql ./README.md
+            - run: echo "Hey buds"
