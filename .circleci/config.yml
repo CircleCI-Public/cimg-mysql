@@ -85,3 +85,4 @@ jobs:
                 version: "0.15.0"
             - sonar/update-readme:
                 image: cimg/mysql
+            - run: sonar set readme cimg/mysql ./README.md
