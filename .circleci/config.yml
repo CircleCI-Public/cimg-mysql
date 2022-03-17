@@ -85,5 +85,5 @@ jobs:
                 version: "0.15.0"
             - sonar/update-readme:
                 image: cimg/mysql
-            - run: sonar set readme cimg/mysql ./README.md
+            - run: sonar set summary cimg/mysql ./README.md
             - run: echo "Hey buds"
