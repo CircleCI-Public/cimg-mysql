@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
+# Do not edit by hand; please use build scripts/templates to make changes
 
-docker build --file 5.7/Dockerfile -t cimg/mysql:5.7.36  -t cimg/mysql:5.7 .
-docker build --file 8.0/Dockerfile -t cimg/mysql:8.0.27  -t cimg/mysql:8.0 .
+docker build --file 8.0/Dockerfile -t cimg/mysql:8.0.28  -t cimg/mysql:8.0 .
