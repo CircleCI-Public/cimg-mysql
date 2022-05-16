@@ -115,8 +115,7 @@ The generated Dockerfile will be located at `./8.0/Dockefile`.
 To build this image locally and try it out, you can run the following:
 
 ```bash
-cd 8.0
-docker build -t test/mysql:8.0 .
+docker build -t test/mysql:8.0 -f 8.0/Dockerfile .
 docker run -it test/mysql:8.0 bash
 ```
 
