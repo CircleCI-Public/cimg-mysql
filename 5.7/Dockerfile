@@ -1,8 +1,12 @@
-FROM cimg/base:2021.10
+# vim:set ft=dockerfile:
+
+# Do not edit individual Dockerfiles manually. Instead, please make changes to the Dockerfile.template, which will be used by the build script to generate Dockerfiles.
+
+FROM cimg/base:2022.08
 
 LABEL maintainer="Community & Partner Engineering Team <community-partner@circleci.com>"
 
-ENV MYSQL_VERSION=5.7.36 \
+ENV MYSQL_VERSION=5.7.37 \
 	MYSQL_VERSION_MAJOR=5 \
 	MYSQL_VERSION_MINOR=5.7
 
