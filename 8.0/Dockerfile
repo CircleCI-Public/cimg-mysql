@@ -2,11 +2,11 @@
 
 # Do not edit individual Dockerfiles manually. Instead, please make changes to the Dockerfile.template, which will be used by the build script to generate Dockerfiles.
 
-FROM cimg/base:2022.01
+FROM cimg/base:2023.04
 
 LABEL maintainer="Community & Partner Engineering Team <community-partner@circleci.com>"
 
-ENV MYSQL_VERSION=8.0.28 \
+ENV MYSQL_VERSION=8.0.33 \
 	MYSQL_VERSION_MAJOR=8 \
 	MYSQL_VERSION_MINOR=8.0
 
