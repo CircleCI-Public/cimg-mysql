@@ -7,16 +7,30 @@ workflows:
   main:
     jobs:
       - build:
-          context: cimg-publishing
+          name: "Test"
+          filters:
+            branches:
+              ignore:
+                - main
+          context: cimg-docker-image-building
+      - build:
+          name: "Deploy"
+          filters:
+            branches:
+              only:
+                - main
+          context:
+            - cimg-docker-image-building
+            - cimg-docker-image-publishing
 
 jobs:
   build:
     docker:
-      - image: cimg/base:2022.01
+      - image: cimg/base:current
+    resource_class: 2xlarge+
     steps:
       - checkout
-      - setup_remote_docker:
-          version: "20.10.11"
+      - setup_remote_docker
       - run:
           name: "Build Docker Images"
           command: |
