@@ -12,7 +12,10 @@ workflows:
             branches:
               ignore:
                 - main
-          context: cimg-docker-image-building
+          context:
+            - slack-notification-access-token
+            - slack-cimg-notifications
+            - cimg-docker-image-building
       - build:
           name: "Deploy"
           filters:
@@ -20,6 +23,8 @@ workflows:
               only:
                 - main
           context:
+            - slack-notification-access-token
+            - slack-cimg-notifications
             - cimg-docker-image-building
             - cimg-docker-image-publishing
 
