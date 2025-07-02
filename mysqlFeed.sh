@@ -17,4 +17,11 @@ getMysqlVersions() {
     done | grep -E '^[0-9]+\.[0-9]+\.[0-9]+$' | sort -V
 }
 
-getMysqlVersions
+VERSIONS=$(getMysqlVersions)
+
+for version in $VERSIONS; do
+    generateVersions "$version"
+    generateSearchTerms "PG_VER=" "$majorMinor/Dockerfile" ""
+    directoryCheck "$majorMinor" "$SEARCH_TERM" true
+    continueRelease "$newVersion"
+done
