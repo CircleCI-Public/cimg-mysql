@@ -81,7 +81,7 @@ jobs:
               docker stop $CONTAINER_ID >/dev/null 2>&1
             done
             printf "All images passed!\n"
-      - deploy:
+      - run:
           name: "Publish Docker Images (main branch only)"
           command: |
             if [ "${CIRCLE_BRANCH}" == "main" ]; then
