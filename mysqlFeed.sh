@@ -8,20 +8,24 @@ else
 fi
 
 getMysqlVersions() {
-    PAGE_SIZE=100
-    TOTAL=$(curl -s "https://registry.hub.docker.com/v2/repositories/library/mysql/tags?page_size=1" | jq '.count')
-    PAGES=$(( (TOTAL + PAGE_SIZE - 1) / PAGE_SIZE ))
-
-    for ((page=1; page<=PAGES; page++)); do
-        curl -s "https://registry.hub.docker.com/v2/repositories/library/mysql/tags?page_size=${PAGE_SIZE}&page=${page}" | jq -r '.results[].name'
-    done | grep -E '^[0-9]+\.[0-9]+\.[0-9]+$' | sort -V
+  URL="https://dev.mysql.com/doc/relnotes/mysql/8.4/en/"
+  block=$(curl -sL "$URL" | awk '/id="docs-version-list"/,/<\/div>/')
+  echo "$block" | tr '\n' ' ' | grep -o '<a[^>]*>[^>]*</a>' | sed -E 's/.*>([^<]+)<.*/\1/' | grep -Eo '[0-9]+(\.[0-9]+)+' | sort -V -u
 }
 
 VERSIONS=$(getMysqlVersions)
-
 for version in $VERSIONS; do
-    generateVersions "$version"
-    generateSearchTerms "PG_VER=" "$majorMinor/Dockerfile" ""
-    directoryCheck "$majorMinor" "$SEARCH_TERM" true
-    continueRelease "$newVersion"
+  generateVersions "$version"
+  generateSearchTerms "MYSQL_VERSION_MINOR=" "$majorMinor/Dockerfile" ""
+  directoryCheck "$majorMinor" "$SEARCH_TERM" true
 done
+
+if [ -n "${vers[*]}" ]; then
+  rm -rf releases.txt
+  echo "Included version updates: ${vers[*]}"
+  echo "Running release script"
+  ./shared/release.sh "${vers[@]}"
+else
+  echo "No new version updates"
+  exit 0
+fi
