@@ -1,5 +1,12 @@
 #!/usr/bin/env bash
 # Do not edit by hand; please use build scripts/templates to make changes
+set -eo pipefail
 
-docker build --file 8.0/Dockerfile -t cimg/mysql:8.0.42  -t cimg/mysql:8.0 .
-
+docker build --file 8.1/Dockerfile -t cimg/mysql:8.1.0 -t cimg/mysql:8.1 --platform linux/amd64 --push .
+docker build --file 8.2/Dockerfile -t cimg/mysql:8.2.0 -t cimg/mysql:8.2 --platform linux/amd64 --push .
+docker build --file 8.3/Dockerfile -t cimg/mysql:8.3.0 -t cimg/mysql:8.3 --platform linux/amd64 --push .
+docker build --file 9.0/Dockerfile -t cimg/mysql:9.0.0 -t cimg/mysql:9.0 --platform linux/amd64 --push .
+docker build --file 9.1/Dockerfile -t cimg/mysql:9.1.0 -t cimg/mysql:9.1 --platform linux/amd64 --push .
+docker build --file 9.2/Dockerfile -t cimg/mysql:9.2.0 -t cimg/mysql:9.2 --platform linux/amd64 --push .
+docker build --file 9.3/Dockerfile -t cimg/mysql:9.3.0 -t cimg/mysql:9.3 --platform linux/amd64 --push .
+docker build --file 9.4/Dockerfile -t cimg/mysql:9.4.0 -t cimg/mysql:9.4 --platform linux/amd64 --push .
