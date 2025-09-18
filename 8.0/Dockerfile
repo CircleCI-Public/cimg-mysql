@@ -6,7 +6,7 @@ FROM cimg/base:2025.07
 
 LABEL maintainer="CircleCI Execution Team <eng-execution@circleci.com>"
 
-ENV MYSQL_VERSION=8.0.42 \
+ENV MYSQL_VERSION=8.0.43 \
 	MYSQL_VERSION_MAJOR=8 \
 	MYSQL_VERSION_MINOR=8.0
 

@@ -6,7 +6,7 @@ FROM cimg/base:2022.08
 
 LABEL maintainer="Community & Partner Engineering Team <community-partner@circleci.com>"
 
-ENV MYSQL_VERSION=5.7.38 \
+ENV MYSQL_VERSION=5.7.44 \
 	MYSQL_VERSION_MAJOR=5 \
 	MYSQL_VERSION_MINOR=5.7
 
