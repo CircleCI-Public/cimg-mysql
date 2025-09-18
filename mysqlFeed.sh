@@ -8,14 +8,19 @@ else
 fi
 
 getMysqlVersions() {
-  URL="https://dev.mysql.com/doc/relnotes/mysql/8.4/en/"
+  URL="https://dev.mysql.com/doc/relnotes/mysql/8.0/en/"
   block=$(curl -sL "$URL" | awk '/id="docs-version-list"/,/<\/div>/')
   echo "$block" | tr '\n' ' ' | grep -o '<a[^>]*>[^>]*</a>' | sed -E 's/.*>([^<]+)<.*/\1/' | grep -Eo '[0-9]+(\.[0-9]+)+' | sed -E 's/^([0-9]+\.[0-9]+)$/\1.0/' | sort -V -u
 }
 
 VERSIONS=$(getMysqlVersions)
 for version in $VERSIONS; do
-  generateVersions "$version"
+  if [ "$version" = "9.0.0" ]; then
+    local_version="9.0.1"
+  else
+    local_version="$version"
+  fi
+  generateVersions "$local_version"
   generateSearchTerms "MYSQL_VERSION_MINOR=" "$majorMinor/Dockerfile" ""
   directoryCheck "$majorMinor" "$SEARCH_TERM" true
 done
