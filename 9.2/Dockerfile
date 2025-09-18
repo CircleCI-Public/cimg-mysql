@@ -1,0 +1,58 @@
+# vim:set ft=dockerfile:
+
+# Do not edit individual Dockerfiles manually. Instead, please make changes to the Dockerfile.template, which will be used by the build script to generate Dockerfiles.
+
+FROM cimg/base:2025.07
+
+LABEL maintainer="CircleCI Execution Team <eng-execution@circleci.com>"
+
+ENV MYSQL_VERSION=9.2 \
+	MYSQL_VERSION_MAJOR=9 \
+	MYSQL_VERSION_MINOR=9.2
+
+USER root
+
+RUN groupadd -r mysql && useradd -r -g mysql mysql && \
+	mkdir /docker-entrypoint-initdb.d && \
+	UBUNTU_VERSION=$(lsb_release -r -s) && \
+	if [ $MYSQL_VERSION_MAJOR == "5" ]; then \
+		UBUNTU_VERSION=18.04; \
+	fi && \
+	curl -sSL https://dev.mysql.com/get/Downloads/MySQL-${MYSQL_VERSION_MINOR}/mysql-server_${MYSQL_VERSION}-1ubuntu${UBUNTU_VERSION}_amd64.deb-bundle.tar | tar -x && \
+	find -type f -name '*dbgsym*' -delete && \
+	apt update && apt install -y gosu && \
+	apt install ./*.deb --allow-downgrades && \
+	rm -rf *.deb && \
+	rm -rf /var/lib/apt/lists/* && \
+	rm -rf /var/lib/mysql && mkdir -p /var/lib/mysql /var/run/mysqld && \
+	chown -R mysql:mysql /var/lib/mysql /var/run/mysqld && \
+	chmod 777 /var/run/mysqld /var/lib/mysql && \
+	echo $'\n\
+	[mysqld]\n\
+	pid-file=/var/run/mysqld/mysqld.pid\n\
+	socket=/var/run/mysqld/mysqld.sock\n\
+	datadir=/var/lib/mysql\n\
+	default_authentication_plugin=mysql_native_password\n\
+	secure-file-priv=NULL' >> /etc/mysql/my.cnf && \
+	echo '[mysqld]\nskip-host-cache\nskip-name-resolve' > /etc/mysql/conf.d/docker.cnf && \
+	find /etc/mysql/ -name '*.cnf' -print0 \
+		| xargs -0 grep -lZE '^(bind-address|log)' \
+		| xargs -rt -0 sed -Ei 's/^(bind-address|log)/#&/'
+
+COPY docker-entrypoint.sh /usr/local/bin/
+
+# symlink for backwards compatiblity
+RUN ln -s usr/local/bin/docker-entrypoint.sh / && \
+	chmod +x /usr/local/bin/docker-entrypoint.sh && \
+	chown -R mysql:mysql /usr/local/bin/docker-entrypoint.sh && \
+	mysql --version | grep "${MYSQL_VERSION}"
+
+ENV MYSQL_ROOT_HOST=% \
+	MYSQL_ALLOW_EMPTY_PASSWORD=true \
+	MYSQL_DATABASE=circle_test \
+	MYSQL_MAJOR=$MYSQL_VERSION_MINOR
+
+ENTRYPOINT ["docker-entrypoint.sh"]
+STOPSIGNAL SIGINT
+EXPOSE 3306
+CMD ["mysqld"]
