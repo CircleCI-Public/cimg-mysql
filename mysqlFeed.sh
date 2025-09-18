@@ -10,7 +10,7 @@ fi
 getMysqlVersions() {
   URL="https://dev.mysql.com/doc/relnotes/mysql/8.4/en/"
   block=$(curl -sL "$URL" | awk '/id="docs-version-list"/,/<\/div>/')
-  echo "$block" | tr '\n' ' ' | grep -o '<a[^>]*>[^>]*</a>' | sed -E 's/.*>([^<]+)<.*/\1/' | grep -Eo '[0-9]+(\.[0-9]+)+' | sort -V -u
+  echo "$block" | tr '\n' ' ' | grep -o '<a[^>]*>[^>]*</a>' | sed -E 's/.*>([^<]+)<.*/\1/' | grep -Eo '[0-9]+(\.[0-9]+)+' | sed -E 's/^([0-9]+\.[0-9]+)$/\1.0/' | sort -V -u
 }
 
 VERSIONS=$(getMysqlVersions)
