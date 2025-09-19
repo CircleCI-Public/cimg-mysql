@@ -8,13 +8,17 @@ else
 fi
 
 getMysqlVersions() {
-  URL="https://dev.mysql.com/doc/relnotes/mysql/8.0/en/"
-  block=$(curl -sL "$URL" | awk '/id="docs-version-list"/,/<\/div>/')
-  echo "$block" | tr '\n' ' ' | grep -o '<a[^>]*>[^>]*</a>' | sed -E 's/.*>([^<]+)<.*/\1/' | grep -Eo '[0-9]+(\.[0-9]+)+' | sed -E 's/^([0-9]+\.[0-9]+)$/\1.0/' | sort -V -u
+  curl -s "https://api.github.com/repos/mysql/mysql-server/tags?per_page=200" | \
+  jq -r '.[] | 
+      select(.name | test("mysql-cluster-8\\.[1-9]|mysql-cluster-[9-9]\\.[0-9]|mysql-cluster-[1-9][0-9]\\.[0-9]")) | 
+      .name | 
+      sub("mysql-cluster-"; "")' | \
+  sort -V -r
 }
 
 VERSIONS=$(getMysqlVersions)
 for version in $VERSIONS; do
+  # Version 9.0.0 is not available
   if [ "$version" = "9.0.0" ]; then
     local_version="9.0.1"
   else
