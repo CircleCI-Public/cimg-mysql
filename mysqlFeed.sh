@@ -25,8 +25,15 @@ for version in $VERSIONS; do
     local_version="$version"
   fi
   generateVersions "$local_version"
-  generateSearchTerms "MYSQL_VERSION_MINOR=" "$majorMinor/Dockerfile" ""
-  directoryCheck "$majorMinor" "$SEARCH_TERM" true
+  generateSearchTerms "MYSQL_VERSION=" "$majorMinor/Dockerfile"
+  echo "The search term is: $SEARCH_TERM"
+  directoryCheck "$majorMinor" "$SEARCH_TERM"
+
+  # This condition only happens when the version in the docker file is less than the version of the loop
+  if [[ $(eval echo $?) == 0 ]]; then
+    echo "Condition met with $version"
+    generateVersionString "$newVersion"
+  fi
 done
 
 if [ -n "${vers[*]}" ]; then
