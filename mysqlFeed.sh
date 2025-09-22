@@ -18,13 +18,11 @@ getMysqlVersions() {
 
 VERSIONS=$(getMysqlVersions)
 for version in $VERSIONS; do
-  # Version 9.0.0 is not available
-  if [ "$version" = "9.0.0" ]; then
-    local_version="9.0.1"
-  else
-    local_version="$version"
+  # MySQL does not provide a artifcat for this versions anymore.
+  if [ "$version" == "9.0.0" ] || [ "$version" == "8.4.2" ]; then
+    continue
   fi
-  generateVersions "$local_version"
+  generateVersions "$version"
   generateSearchTerms "MYSQL_VERSION=" "$majorMinor/Dockerfile"
   echo "The search term is: $SEARCH_TERM"
   directoryCheck "$majorMinor" "$SEARCH_TERM"
