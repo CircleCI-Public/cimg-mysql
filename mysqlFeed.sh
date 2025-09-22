@@ -19,7 +19,7 @@ getMysqlVersions() {
 VERSIONS=$(getMysqlVersions)
 for version in $VERSIONS; do
   # MySQL does not provide a artifcat for this versions anymore.
-  if [ "$version" == "9.0.0" ] || [ "$version" == "8.4.2" ]; then
+  if [ "$version" == "9.0.0" ] || [ "$version" == "8.4.1" ]; then
     continue
   fi
   generateVersions "$version"
