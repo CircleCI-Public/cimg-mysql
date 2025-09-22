@@ -7,4 +7,3 @@ docker build --file 8.4/Dockerfile -t cimg/mysql:8.4.5 -t cimg/mysql:8.4 --platf
 docker build --file 8.4/Dockerfile -t cimg/mysql:8.4.4 -t cimg/mysql:8.4 --platform linux/amd64 --push .
 docker build --file 8.4/Dockerfile -t cimg/mysql:8.4.3 -t cimg/mysql:8.4 --platform linux/amd64 --push .
 docker build --file 8.4/Dockerfile -t cimg/mysql:8.4.2 -t cimg/mysql:8.4 --platform linux/amd64 --push .
-docker build --file 8.4/Dockerfile -t cimg/mysql:8.4.1 -t cimg/mysql:8.4 --platform linux/amd64 --push .
