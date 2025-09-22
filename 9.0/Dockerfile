@@ -32,8 +32,12 @@ RUN groupadd -r mysql && useradd -r -g mysql mysql && \
 	pid-file=/var/run/mysqld/mysqld.pid\n\
 	socket=/var/run/mysqld/mysqld.sock\n\
 	datadir=/var/lib/mysql\n\
-	default_authentication_plugin=mysql_native_password\n\
-	secure-file-priv=NULL' >> /etc/mysql/my.cnf && \
+	secure-file-priv=NULL\n' >> /etc/mysql/my.cnf && \
+	if [ $MYSQL_VERSION_MINOR == "8.4" ]; then \
+		echo $'mysql-native-password=ON' >> /etc/mysql/my.cnf; \
+	elif [ $MYSQL_VERSION_MAJOR -le "8" ]; then \
+		echo $'default_authentication_plugin=mysql_native_password' >> /etc/mysql/my.cnf; \
+	fi && \
 	echo '[mysqld]\nskip-host-cache\nskip-name-resolve' > /etc/mysql/conf.d/docker.cnf && \
 	find /etc/mysql/ -name '*.cnf' -print0 \
 		| xargs -0 grep -lZE '^(bind-address|log)' \
