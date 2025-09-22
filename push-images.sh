@@ -3,4 +3,3 @@
 set -eo pipefail
 docker push cimg/mysql:8.4
 docker push cimg/mysql:8.4.6
-docker push cimg/mysql:8.4.5
