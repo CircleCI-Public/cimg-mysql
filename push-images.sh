@@ -7,4 +7,3 @@ docker push cimg/mysql:8.4.5
 docker push cimg/mysql:8.4.4
 docker push cimg/mysql:8.4.3
 docker push cimg/mysql:8.4.2
-docker push cimg/mysql:8.4.1
