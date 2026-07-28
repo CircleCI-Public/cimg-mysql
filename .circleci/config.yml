@@ -14,6 +14,7 @@ workflows:
     when: << pipeline.parameters.cron >>
     jobs:
       - cimg/update:
+          resource-class: small.gen2
           update-script: mysqlFeed.sh
           context:
             - slack-notification-access-token
@@ -25,7 +26,7 @@ workflows:
     jobs:
       - cimg/build-and-deploy:
           name: "Test"
-          resource-class: 2xlarge+
+          resource-class: 2xlarge+.gen2
           docker-namespace: ccitest
           docker-repository: mysql
           filters:
@@ -44,7 +45,7 @@ workflows:
                 template: basic_fail_1
       - cimg/build-and-deploy:
           name: "Deploy"
-          resource-class: 2xlarge+
+          resource-class: 2xlarge+.gen2
           docker-repository: mysql
           filters:
             branches:
